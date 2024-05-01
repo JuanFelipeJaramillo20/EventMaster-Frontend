@@ -1,0 +1,46 @@
+<form class="form-login" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <h1>Incia Sesión</h1>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      placeholder="Email"
+    />
+    <label for="email">
+      Correo Electrónico
+      <img
+        src="../../assets/icons/images/email.png"
+        alt="email input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="password"
+      id="password"
+      formControlName="password"
+      placeholder="Password"
+    />
+    <label for="password">
+      Contraseña
+      <img
+        src="../../assets/icons/images/password.png"
+        alt="password input reference"
+      />
+    </label>
+  </div>
+  <button type="submit">Inicia</button>
+  <hr />
+  <div class="form-group__register">
+    ¿Sin cuenta? Resgistrate
+    <a
+      routerLink="/register"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      >aquí</a
+    >
+  </div>
+</form>

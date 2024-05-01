@@ -1,0 +1,58 @@
+<form class="form-register" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
+    <h1>Registrate</h1>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="text"
+      id="fullName"
+      formControlName="fullName"
+      placeholder="Name"
+    />
+    <label for="fullName">
+      Nombre Completo
+      <img
+        src="../../assets/icons/images/user.png"
+        alt="email input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      placeholder="Email"
+    />
+    <label for="email">
+      Correo Electrónico
+      <img
+        src="../../assets/icons/images/email.png"
+        alt="email input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="password"
+      id="password"
+      formControlName="password"
+      placeholder="Password"
+    />
+    <label for="password">
+      Contrseña
+      <img
+        src="../../assets/icons/images/password.png"
+        alt="password input reference"
+      />
+    </label>
+  </div>
+  <button type="submit">Registrarse</button>
+  <hr />
+  <div class="form-group__register">
+    ¿Con cuenta? Inicia sesión
+    <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page"
+      >aquí</a
+    >
+  </div>
+</form>

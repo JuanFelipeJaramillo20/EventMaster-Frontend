@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --main-color: white;
+  --app-main-color: #116d6e;
+  --app-less-color: #cd1818;
+  --app-error-background: rgba(255, 0, 0, 0.15);
+  --app-error-border: rgba(255, 0, 0, 0.5);
+}
+
+html {
+  & * {
+    font-family: sans-serif;
+  }
+}
+
+label {
+  font-size: 12px;
+}
+
+input {
+  border: 1px solid black;
+  border-radius: 5px;
+
+  padding: 10px;
+
+  font-size: 12px;
+
+  transition: background-color 0.25s, border 0.25s;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
+}
+
+button {
+  border: 1px solid var(--app-main-color);
+  background-color: var(--app-main-color);
+  border-radius: 5px;
+
+  padding: 10px;
+
+  cursor: pointer;
+
+  color: var(--main-color);
+
+  transition: 0.2s ease;
+
+  font-size: 14px;
+
+  &:hover {
+    color: var(--app-main-color);
+
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+  }
+}
+
+hr {
+  height: 1px;
+  width: 100%;
+
+  margin: 20px 0 20px 0;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+@keyframes invalid-bounce {
+  0% {
+    transform: translateX(0px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(0px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.invalid--input {
+  background-color: var(--app-error-background);
+  border: 1px solid var(--app-error-border);
+}
+

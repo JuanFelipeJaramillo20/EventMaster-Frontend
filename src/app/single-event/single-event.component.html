@@ -1,0 +1,19 @@
+<section class="single-event-section">
+  <ol *ngIf="eventToShow">
+    <li>
+      {{eventToShow.name}}
+    </li>
+    <li>
+      {{eventToShow.capacity}}
+    </li>
+    <li>
+      {{eventToShow.type}}
+    </li>
+    <li>
+      {{eventToShow.description}}
+    </li>
+    <li>
+      <button (click)="deleteEvent()">Eliminar Evento</button>
+    </li>
+  </ol>
+</section>

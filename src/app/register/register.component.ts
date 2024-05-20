@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 
 import {
   FormBuilder,
@@ -8,9 +8,17 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { RegisterCredentials } from '../../types/types';
+import { registerUser } from '../../apis/registerUser';
+
+import {
+  RegisterCredentials,
+  ErrorResponse,
+  RegisterApiResponse,
+} from '../../types/types';
 
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
+
+import { APP_LOGIN } from '../../constants/constants';
 
 @Component({
   selector: 'app-register',
@@ -22,9 +30,18 @@ import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
-      fullName: [
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.min(2),
+          Validators.max(50),
+          Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/),
+        ],
+      ],
+      lastName: [
         '',
         [
           Validators.required,
@@ -38,6 +55,10 @@ export class RegisterComponent {
     });
   }
 
+  redirectToLogin() {
+    this.router.navigate([`/${APP_LOGIN}`]);
+  }
+
   validateRegister(credentials: RegisterCredentials) {
     const nameRegex = /^[A-Za-z -]*$/;
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -45,19 +66,35 @@ export class RegisterComponent {
 
     const validator: any = {
       Nombre: () => {
-        if (credentials.fullName.length < 2) {
-          addErrorInput('fullName');
-          return [false, 'El nombre es muy corto'];
+        if (credentials.firstName.length < 2) {
+          addErrorInput('firstName');
+          return [false, 'El Nombre es muy corto'];
         }
-        if (credentials.fullName.length > 50) {
-          addErrorInput('fullName');
-          return [false, 'El nombre es muy largo'];
+        if (credentials.firstName.length > 50) {
+          addErrorInput('firstName');
+          return [false, 'El Nombre es muy largo'];
         }
-        if (!credentials.fullName.match(nameRegex)) {
-          addErrorInput('fullName');
-          return [false, 'El nombre no es válido'];
+        if (!credentials.firstName.match(nameRegex)) {
+          addErrorInput('firstName');
+          return [false, 'El Nombre no es válido'];
         }
-        removeErrorInput('fullName');
+        removeErrorInput('firstName');
+        return [true, ''];
+      },
+      Apellido: () => {
+        if (credentials.lastName.length < 2) {
+          addErrorInput('lastName');
+          return [false, 'El Apellido es muy corto'];
+        }
+        if (credentials.lastName.length > 50) {
+          addErrorInput('lastName');
+          return [false, 'El Apellido es muy largo'];
+        }
+        if (!credentials.lastName.match(nameRegex)) {
+          addErrorInput('lastName');
+          return [false, 'El Apellido no es válido'];
+        }
+        removeErrorInput('lastName');
         return [true, ''];
       },
       Email: () => {
@@ -90,17 +127,29 @@ export class RegisterComponent {
       const [state, error] = validator[key]();
       if (!state) return [state, error, key];
     }
-    return [true, 'Registro exitoso!', ''];
+    return [true, '', ''];
   }
+
+  getNewUser = async (userCredentials: RegisterCredentials) => {
+    const registeredUser: ErrorResponse | RegisterApiResponse | any =
+      await registerUser(userCredentials);
+
+    if (registeredUser?.errorMessage || !registeredUser?.data) {
+      // TIRAR ERROR EN NOTIFICACIÓN (ERROR DEL FETCH)
+      return;
+    }
+    this.redirectToLogin();
+  };
 
   onSubmit() {
     console.log('registerForm', this.registerForm.value);
     if (!this.registerForm.value) return;
     const [state, error, key] = this.validateRegister(this.registerForm.value);
-    console.log({
-      state,
-      error,
-      key,
-    });
+    console.log('hasErrors?', { state, error, key });
+    if (!state || error) {
+      // TIRAR ERROR EN NOTIFICACIÓN (FORMULARIO INVALIDO, USAR LA KEY PARA SABER CUAL INPUT FUE)
+      return;
+    }
+    this.getNewUser(this.registerForm.value);
   }
 }

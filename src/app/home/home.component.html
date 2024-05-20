@@ -1,0 +1,18 @@
+<section class="home-seccion">
+  <ol *ngFor="let event of allFetchedEvents">
+    <li>
+      <div>
+        {{ event.name }}
+      </div>
+      <div>
+        {{ event.type }}
+      </div>
+      <div>
+        {{ event.capacity }}
+      </div>
+      <div>
+        {{ event.description }}
+      </div>
+    </li>
+  </ol>
+</section>

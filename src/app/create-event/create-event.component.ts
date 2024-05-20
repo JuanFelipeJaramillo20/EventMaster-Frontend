@@ -58,7 +58,7 @@ export class CreateEventComponent {
           addErrorInput('type');
           return [false, 'Añade un tipo de evento'];
         }
-        if (newEvent.type.length > 20) {
+        if (newEvent.type.length > 10) {
           addErrorInput('type');
           return [false, 'El tipo del evento es muy largo'];
         }

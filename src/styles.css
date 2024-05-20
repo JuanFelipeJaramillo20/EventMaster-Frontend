@@ -6,6 +6,23 @@
   --app-error-border: rgba(255, 0, 0, 0.5);
 }
 
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: auto; /* Adjust the width */
+}
+
+.multi-line-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Number of lines to show */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.5em * 3); /* Adjust based on line-height (line-height * number of lines) */
+  line-height: 1.5em; /* Adjust the line-height */
+}
+
 html {
   & * {
     font-family: sans-serif;
@@ -14,6 +31,15 @@ html {
 
 label {
   font-size: 12px;
+}
+
+ol {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
 }
 
 input {
@@ -71,6 +97,10 @@ hr {
 a {
   color: black;
   text-decoration: underline;
+}
+
+h6 {
+  margin: 0;
 }
 
 @keyframes invalid-bounce {

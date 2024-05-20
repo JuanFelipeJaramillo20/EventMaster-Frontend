@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { getAllEvents } from '../../apis/getAllEvents';
+
+import { APP_SINGLE_EVENT } from '../../constants/constants';
 
 import { EventRetrieved } from '../../types/types';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

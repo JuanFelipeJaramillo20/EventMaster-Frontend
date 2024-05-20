@@ -5,5 +5,24 @@
       alt="Event master icon"
     />
   </header>
-  <article></article>
+  <article>
+    <ol *ngIf="showNavigation">
+      <li>
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Home</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/create-event"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Crear Evento</a
+        >
+      </li>
+    </ol>
+  </article>
 </nav>

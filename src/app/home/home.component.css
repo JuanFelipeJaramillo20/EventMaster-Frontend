@@ -1,0 +1,47 @@
+.home-seccion {
+  background-color: var(--main-color);
+
+  width: 100vw;
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+
+  margin-inline: 50px;
+
+  & ol {
+    padding: 10px;
+
+    width: 240px;
+    height: 260px !important;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+
+    display: grid;
+    grid-template-areas:
+      "name name"
+      "type capacity"
+      "description description";
+
+    & .home-event__name {
+      grid-area: name;
+    }
+    & .home-event__type {
+      grid-area: type;
+    }
+    & .home-event__capacity {
+      grid-area: capacity;
+    }
+    & .home-event__description {
+      grid-area: description;
+    }
+
+    & li {
+      & > div {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}

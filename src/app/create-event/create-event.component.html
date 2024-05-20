@@ -1,0 +1,71 @@
+<form
+  class="form-create-envent"
+  [formGroup]="createEventForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div>
+    <h1>Crear Evento</h1>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="name"
+      id="name"
+      formControlName="name"
+      placeholder="Nombre del Evento"
+    />
+    <label for="name">
+      Nombre del Evento
+      <img
+        src="../../assets/icons/images/email.png"
+        alt="name input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="string"
+      id="type"
+      formControlName="type"
+      placeholder="Tipo de evento"
+    />
+    <label for="type">
+      Tipo de evento
+      <img
+        src="../../assets/icons/images/password.png"
+        alt="type input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="number"
+      id="capacity"
+      formControlName="capacity"
+      placeholder="Capacidad del evento"
+      min="1"
+    />
+    <label for="capacity">
+      Capacidad del evento
+      <img
+        src="../../assets/icons/images/password.png"
+        alt="capacity input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <textarea
+      name="description"
+      id="description"
+      formControlName="description"
+      placeholder="descripción del evento"
+    ></textarea>
+    <label for="description">
+      Descripción del evento
+      <img
+        src="../../assets/icons/images/password.png"
+        alt="description input reference"
+      />
+    </label>
+  </div>
+  <button type="submit">Crear Evento</button>
+</form>

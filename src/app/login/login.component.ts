@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -7,9 +7,18 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { LoginCredentials } from '../../types/types';
+import { loginUser } from '../../apis/loginUser';
+
+import {
+  LoginCredentials,
+  ErrorResponse,
+  LoginApiResponse,
+} from '../../types/types';
 
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
+import { setLocalToken } from '../../localStorage/handleToken';
+
+import { APP_HOME } from '../../constants/constants';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +30,7 @@ import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
       email: [
         '',
@@ -33,6 +42,10 @@ export class LoginComponent implements OnInit {
       ],
       password: ['', Validators.required],
     });
+  }
+
+  redirectToHome() {
+    this.router.navigate([`/${APP_HOME}`]);
   }
 
   ngOnInit() {}
@@ -72,17 +85,37 @@ export class LoginComponent implements OnInit {
       const [state, error] = validator[key]();
       if (!state) return [state, error, key];
     }
-    return [true, 'Inicio exitoso!', ''];
+    return [true, '', ''];
   }
 
+  getCurrentUser = async (userCredentials: LoginCredentials) => {
+    const loginCurrentUser: ErrorResponse | LoginApiResponse | any =
+      await loginUser(userCredentials);
+
+    if (
+      loginCurrentUser?.errorMessage ||
+      !loginCurrentUser?.data ||
+      !loginCurrentUser?.data?.success ||
+      !loginCurrentUser?.data?.access_token
+    ) {
+      // TIRAR ERROR EN NOTIFICACIÓN (ERROR DEL FETCH)
+      return;
+    }
+    setLocalToken(loginCurrentUser?.data?.access_token);
+
+    this.redirectToHome();
+  };
+
   onSubmit() {
-    console.log(this.loginForm.value);
+    console.log('loginForm', this.loginForm.value);
     if (!this.loginForm.value) return;
     const [state, error, key] = this.validateLogin(this.loginForm.value);
-    console.log({
-      state,
-      error,
-      key,
-    });
+    console.log('hasErrors?', { state, error, key });
+    if (!state || error) {
+      // TIRAR ERROR EN NOTIFICACIÓN (FORMULARIO INVALIDO, USAR LA KEY PARA SABER CUAL INPUT FUE)
+      return;
+    }
+    this.getCurrentUser(this.loginForm.value)
+
   }
 }

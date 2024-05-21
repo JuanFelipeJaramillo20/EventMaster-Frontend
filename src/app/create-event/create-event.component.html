@@ -1,5 +1,5 @@
 <form
-  class="form-create-envent"
+  class="form-create-envent forms"
   [formGroup]="createEventForm"
   (ngSubmit)="onSubmit()"
 >
@@ -11,27 +11,22 @@
       type="name"
       id="name"
       formControlName="name"
-      placeholder="Nombre del Evento"
+      placeholder="Reunión con los panas"
     />
     <label for="name">
       Nombre del Evento
       <img
-        src="../../assets/icons/images/email.png"
+        src="../../assets/icons/images/event-name.png"
         alt="name input reference"
       />
     </label>
   </div>
   <div class="form-group--input">
-    <input
-      type="string"
-      id="type"
-      formControlName="type"
-      placeholder="Tipo de evento"
-    />
+    <input type="string" id="type" formControlName="type" placeholder="Paseo" />
     <label for="type">
       Tipo de evento
       <img
-        src="../../assets/icons/images/password.png"
+        src="../../assets/icons/images/type-event.png"
         alt="type input reference"
       />
     </label>
@@ -47,7 +42,7 @@
     <label for="capacity">
       Capacidad del evento
       <img
-        src="../../assets/icons/images/password.png"
+        src="../../assets/icons/images/event-capacity.png"
         alt="capacity input reference"
       />
     </label>
@@ -57,15 +52,18 @@
       name="description"
       id="description"
       formControlName="description"
-      placeholder="descripción del evento"
+      placeholder="Habrá fiest y rumba, lleguen rápido"
     ></textarea>
     <label for="description">
       Descripción del evento
       <img
-        src="../../assets/icons/images/password.png"
+        src="../../assets/icons/images/event-description.png"
         alt="description input reference"
       />
     </label>
   </div>
   <button type="submit">Crear Evento</button>
 </form>
+<div *ngIf="isLoading">
+  <app-loader></app-loader>
+</div>

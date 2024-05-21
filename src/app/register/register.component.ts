@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
 
 import {
   FormBuilder,
@@ -9,6 +12,8 @@ import {
 } from '@angular/forms';
 
 import { registerUser } from '../../apis/registerUser';
+
+import { LoaderComponent } from '../loader/loader.component';
 
 import {
   RegisterCredentials,
@@ -23,12 +28,20 @@ import { APP_LOGIN } from '../../constants/constants';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+    CommonModule,
+    LoaderComponent,
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
@@ -131,14 +144,20 @@ export class RegisterComponent {
   }
 
   getNewUser = async (userCredentials: RegisterCredentials) => {
+    this.isLoading = true;
     const registeredUser: ErrorResponse | RegisterApiResponse | any =
       await registerUser(userCredentials);
 
     if (registeredUser?.errorMessage || !registeredUser?.data) {
-      // TIRAR ERROR EN NOTIFICACIÓN (ERROR DEL FETCH)
+      this.failureNotification("Intentalo nuevamente por favor")
+      this.isLoading = false;
       return;
     }
-    this.redirectToLogin();
+    this.isLoading = false;
+    this.successNotification();
+    setTimeout(() => {
+      this.redirectToLogin();
+    }, 1500);
   };
 
   onSubmit() {
@@ -147,9 +166,33 @@ export class RegisterComponent {
     const [state, error, key] = this.validateRegister(this.registerForm.value);
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
-      // TIRAR ERROR EN NOTIFICACIÓN (FORMULARIO INVALIDO, USAR LA KEY PARA SABER CUAL INPUT FUE)
+      this.failureNotification(error);
       return;
     }
     this.getNewUser(this.registerForm.value);
   }
+
+  successNotification() {
+    Swal.fire('Registrado!', 'Te has registrado correctamente', 'success');
+  }
+  failureNotification(error: string) {
+    Swal.fire('Hubo un error', error, 'error');
+  }
+
+  // alertConfirmation() {
+  //   Swal.fire({
+  //     title: 'Registrado!',
+  //     text: 'Te has registrado correctamente',
+  //     icon: 'success',
+  //     showCancelButton: false,
+  //     confirmButtonText: 'Ir a Login',
+  //     cancelButtonText: 'Quedarse',
+  //   }).then((result) => {
+  //     if (result.value) {
+  //       Swal.fire('Removed!', 'Product removed successfully.', 'success');
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       Swal.fire('Cancelled', 'Product still in our database.)', 'error');
+  //     }
+  //   });
+  // }
 }

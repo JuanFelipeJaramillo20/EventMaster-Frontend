@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+
+import Swal from 'sweetalert2';
 
 import {
   FormBuilder,
@@ -6,6 +9,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+
+import { LoaderComponent } from '../loader/loader.component';
 
 import { createNewEvent } from '../../apis/createEvent';
 
@@ -16,12 +21,14 @@ import { Event } from '../../types/types';
 @Component({
   selector: 'app-create-event',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LoaderComponent, CommonModule],
   templateUrl: './create-event.component.html',
   styleUrl: './create-event.component.css',
 })
 export class CreateEventComponent {
   createEventForm: FormGroup;
+
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.createEventForm = this.fb.group({
@@ -39,7 +46,7 @@ export class CreateEventComponent {
     });
   }
 
-  validateCreateEvent = (newEvent: Event): (boolean | string | string)[] => {
+  validateCreateEvent = (newEvent: Event) => {
     const validator: any = {
       Nombre: () => {
         if (newEvent.name.length < 1) {
@@ -58,9 +65,9 @@ export class CreateEventComponent {
           addErrorInput('type');
           return [false, 'Añade un tipo de evento'];
         }
-        if (newEvent.type.length > 10) {
+        if (newEvent.type.length > 20) {
           addErrorInput('type');
-          return [false, 'El tipo del evento es muy largo'];
+          return [false, 'El tipo del evento es muy largo, (20 máximo)'];
         }
         if (!newEvent.type.match(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/)) {
           addErrorInput('type');
@@ -103,10 +110,14 @@ export class CreateEventComponent {
   };
 
   createEvent = async (newEvent: Event) => {
+    this.isLoading = true;
     const createdEvent: any = await createNewEvent(newEvent);
     if (createdEvent?.errorMessage || !createdEvent?.data) {
       // TIRAR UNA NOTIFICACIÓN DICIENDO PQ NO SE PUDO HACER
+      this.isLoading = false;
     }
+    this.isLoading = false;
+    this.successNotification();
   };
 
   onSubmit() {
@@ -117,9 +128,20 @@ export class CreateEventComponent {
     );
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
-      // TIRAR ERROR EN NOTIFICACIÓN (FORMULARIO INVALIDO, USAR LA KEY PARA SABER CUAL INPUT FUE)
+      this.failureNotification(error);
       return;
     }
     this.createEvent(this.createEventForm.value);
+  }
+
+  successNotification() {
+    Swal.fire(
+      'Evento Creado',
+      'Se ha creado el evento correctamente',
+      'success'
+    );
+  }
+  failureNotification(error: string) {
+    Swal.fire('Evento no creado', error, 'error');
   }
 }

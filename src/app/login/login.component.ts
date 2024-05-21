@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import {
@@ -7,7 +8,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import Swal from 'sweetalert2';
+
 import { loginUser } from '../../apis/loginUser';
+
+import { LoaderComponent } from '../loader/loader.component';
 
 import {
   LoginCredentials,
@@ -22,13 +27,21 @@ import { APP_HOME } from '../../constants/constants';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+    LoaderComponent,
+    CommonModule,
+  ],
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
@@ -50,7 +63,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {}
 
-  validateLogin(credentials: LoginCredentials): (boolean | string | string)[] {
+  validateLogin(credentials: LoginCredentials) {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const spaceRegex = /^\s+/;
 
@@ -89,6 +102,7 @@ export class LoginComponent implements OnInit {
   }
 
   getCurrentUser = async (userCredentials: LoginCredentials) => {
+    this.isLoading = true;
     const loginCurrentUser: ErrorResponse | LoginApiResponse | any =
       await loginUser(userCredentials);
 
@@ -98,12 +112,17 @@ export class LoginComponent implements OnInit {
       !loginCurrentUser?.data?.success ||
       !loginCurrentUser?.data?.access_token
     ) {
-      // TIRAR ERROR EN NOTIFICACIÓN (ERROR DEL FETCH)
+      this.failureNotification("Intentalo otra vez")
+      this.isLoading = false;
       return;
     }
+    this.isLoading = false;
     setLocalToken(loginCurrentUser?.data?.access_token);
 
-    this.redirectToHome();
+    this.successNotification();
+    setTimeout(() => {
+      this.redirectToHome();
+    }, 1500);
   };
 
   onSubmit() {
@@ -112,10 +131,16 @@ export class LoginComponent implements OnInit {
     const [state, error, key] = this.validateLogin(this.loginForm.value);
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
-      // TIRAR ERROR EN NOTIFICACIÓN (FORMULARIO INVALIDO, USAR LA KEY PARA SABER CUAL INPUT FUE)
+      this.failureNotification(error)
       return;
     }
-    this.getCurrentUser(this.loginForm.value)
+    this.getCurrentUser(this.loginForm.value);
+  }
 
+  successNotification() {
+    Swal.fire('Iniciaste sesión!', 'Bienvenido de nuevo', 'success');
+  }
+  failureNotification(error: string) {
+    Swal.fire('Ups! hubo un error', error, 'error');
   }
 }

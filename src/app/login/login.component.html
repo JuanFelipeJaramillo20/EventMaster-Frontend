@@ -32,7 +32,7 @@
       />
     </label>
   </div>
-  <button type="submit">Inicia</button>
+  <button [disabled]="isLoading" type="submit">Inicia</button>
   <hr />
   <div class="form-group__register">
     ¿Sin cuenta? Resgistrate
@@ -44,3 +44,6 @@
     >
   </div>
 </form>
+<div *ngIf="isLoading">
+  <app-loader></app-loader>
+</div>

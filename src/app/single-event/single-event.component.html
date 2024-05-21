@@ -1,19 +1,35 @@
 <section class="single-event-section">
   <ol *ngIf="eventToShow">
-    <li>
-      {{eventToShow.name}}
+    <li class="home-event__name">
+      <h6>Nombre del Evento</h6>
+      <span>{{ eventToShow.name }}</span>
     </li>
-    <li>
-      {{eventToShow.capacity}}
+    <li class="home-event__capacity">
+      <h6>Capacidad del Evento</h6>
+      <span>
+        {{ eventToShow.capacity }}
+      </span>
     </li>
-    <li>
-      {{eventToShow.type}}
+    <li class="home-event__type">
+      <h6>Tipo del evento</h6>
+      <span>
+        {{ eventToShow.type }}
+      </span>
     </li>
-    <li>
-      {{eventToShow.description}}
+    <li class="home-event__description">
+      <h6>Descripción del evento</h6>
+      <span>
+        {{ eventToShow.description }}
+      </span>
     </li>
     <li>
       <button (click)="deleteEvent()">Eliminar Evento</button>
     </li>
+    <li>
+      <button >Actualizar Evento</button>
+    </li>
   </ol>
+  <div *ngIf="isLoading">
+    <app-loader></app-loader>
+  </div>
 </section>

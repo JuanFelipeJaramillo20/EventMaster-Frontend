@@ -2,5 +2,46 @@
   width: 100vw;
   height: 100dvh;
 
-  background-color: red;
+  background-color: var(--main-color);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & ol {
+    display: grid;
+    grid-template-areas:
+      "event-name event-name"
+      "event-capacity event-type"
+      "event-description event-description";
+
+    & .home-event__name {
+      grid-area: event-name;
+    }
+    & .home-event__capacity {
+      grid-area: event-capacity;
+    }
+    & .home-event__type {
+      grid-area: event-type;
+    }
+    & .home-event__description {
+      grid-area: event-description;
+    }
+
+    & li {
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+
+      & h6,
+      & span {
+        font-size: 14px;
+      }
+    }
+  }
 }

@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { getSingleEvent } from '../../apis/getEventById';
 import { deleteEventById } from '../../apis/deleteEvent';
 
+import { LoaderComponent } from '../loader/loader.component';
+
 import { DeletedEventApiResponse } from '../../types/types';
 
 import { EventRetrieved } from '../../types/types';
@@ -12,12 +14,13 @@ import { EventRetrieved } from '../../types/types';
 @Component({
   selector: 'app-single-event',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './single-event.component.html',
   styleUrl: './single-event.component.css',
 })
 export class SingleEventComponent implements OnInit {
   eventId: string | null = null;
+  isLoading: boolean = true;
 
   eventToShow: EventRetrieved | null = null;
 
@@ -30,11 +33,14 @@ export class SingleEventComponent implements OnInit {
     console.log('eventid', this.eventId);
 
     if (!this.eventId) return;
+    this.isLoading = true;
     const fetchedEvent: any = await getSingleEvent(this.eventId);
     if (fetchedEvent?.errorMessage || !fetchedEvent.data) {
+      this.isLoading = false;
       // MOSTRAR NOTIFICACIÓN DE ERROR
       return;
     }
+    this.isLoading = false;
     return fetchedEvent.data;
   };
 

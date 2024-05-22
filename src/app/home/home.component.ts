@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+
+import Swal from 'sweetalert2';
 
 import { LoaderComponent } from '../loader/loader.component';
 
 import { getAllEvents } from '../../apis/getAllEvents';
 
-import { APP_SINGLE_EVENT } from '../../constants/constants';
+import { APP_SINGLE_EVENT, APP_LOGIN } from '../../constants/constants';
 
 import { EventRetrieved } from '../../types/types';
 
@@ -22,6 +24,12 @@ export class HomeComponent implements OnInit {
 
   isLoading: boolean = true;
 
+  constructor(private router: Router) {}
+
+  redirectToLogin() {
+    this.router.navigate([`/${APP_LOGIN}`]);
+  }
+
   ngOnInit(): void {
     this.fetchAllEvents();
   }
@@ -31,10 +39,18 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
     if (allEvents?.errorMessage) {
       this.isLoading = false;
-      // TIRAR UN ERROR MEDIANTE EL COMPONENTE DE NOTIFICATION
       this.allFetchedEvents = [];
+      this.failureNotification(allEvents?.errorMessage)
     }
     this.allFetchedEvents = allEvents.data;
     this.isLoading = false;
   };
+
+  failureNotification(error: string) {
+    Swal.fire('Ups! hubo un error', error, 'error').then((e) => {
+      if (e) {
+        this.redirectToLogin();
+      }
+    });
+  }
 }

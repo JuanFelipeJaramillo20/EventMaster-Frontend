@@ -39,13 +39,19 @@
 
       margin-inline: auto;
 
-      & a {
+      & a,
+      & .hover-link__button {
         text-decoration: none;
 
         font-size: 14px;
         &:hover {
           text-decoration: underline;
         }
+      }
+
+      & li:last-child {
+        position: absolute;
+        right: 35px;
       }
     }
   }

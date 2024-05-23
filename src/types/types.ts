@@ -38,6 +38,11 @@ export type User = {
   lastName: string;
 };
 
+export type UserApiResponse = {
+  statusCode: number;
+  data: User;
+};
+
 // EVENTS TYPES
 export type Event = {
   name: string;

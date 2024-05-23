@@ -15,23 +15,29 @@ export const getAllEvents = async () => {
       },
     });
 
+    if (response.status >= 404) {
+      throw new Error(`No se encontraron registros`)
+    }
+    if (response.status >= 400) {
+      throw new Error(`Inicia sesión e intenta otra vez!`)
+    }
     if (!response.ok) {
-      throw new Error(`Response ok wasn't TRUE, Error: ${response.statusText}`);
+      throw new Error(`Error en la petición: ${response.statusText}`);
     }
 
     const data: EventsGetApiResponse = await response.json();
     if (data.statusCode >= 400) {
-      throw new Error(`status code is not ok, ${data.statusCode}`);
+      throw new Error(`Inicia sesión e intenta otra vez!, ${data.statusCode}`);
     }
     if (!data) {
       throw new Error(
-        `Data cannot be undefined, check status code, data: ${data}`
+        `Inicia sesión e intenta otra vez!, ${data}`
       );
     }
     return data;
   } catch (err) {
     const errorMessage: ErrorResponse = {
-      errorMessage: `Error al registrar el usuario, ${err}`,
+      errorMessage: `${err}`,
     };
     return errorMessage;
   }

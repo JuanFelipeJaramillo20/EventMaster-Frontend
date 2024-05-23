@@ -1,4 +1,5 @@
 <section class="home-seccion">
+  <h2>Todos los Eventos</h2>
   <ol *ngFor="let event of allFetchedEvents">
     <a
       [routerLink]="['/single-event', event.id]"
@@ -7,7 +8,13 @@
     >
       <li class="home-event__name">
         <div>
-          <h6>Nombre:</h6>
+          <h6>
+            Nombre
+            <img
+              src="../../assets/icons/images/event-name.png"
+              alt="Event name"
+            />
+          </h6>
           <span>
             {{ event.name }}
           </span>
@@ -15,13 +22,25 @@
       </li>
       <li class="home-event__type">
         <div>
-          <h6>Tipo:</h6>
+          <h6>
+            Tipo
+            <img
+              src="../../assets/icons/images/type-event.png"
+              alt="Event type"
+            />
+          </h6>
           <span class="ellipsis">{{ event.type }}</span>
         </div>
       </li>
       <li class="home-event__capacity">
         <div>
-          <h6>Capacidad:</h6>
+          <h6>
+            Capacidad
+            <img
+              src="../../assets/icons/images/event-capacity.png"
+              alt="Event capacity"
+            />
+          </h6>
           <span>
             {{ event.capacity }}
           </span>
@@ -29,7 +48,13 @@
       </li>
       <li class="home-event__description">
         <div>
-          <h6>Descripción:</h6>
+          <h6>
+            Descripción
+            <img
+              src="../../assets/icons/images/event-description.png"
+              alt="Event description"
+            />
+          </h6>
           <span class="multi-line-ellipsis">
             {{ event.description }}
           </span>

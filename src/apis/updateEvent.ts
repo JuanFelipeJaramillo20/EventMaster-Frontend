@@ -2,9 +2,9 @@ import { getLocalToken } from '../localStorage/handleToken';
 
 import { PUT_METHOD, ENDPOINT } from '../constants/constants';
 
-import { EventApiResponse, ErrorResponse } from '../types/types';
+import { EventApiResponse, ErrorResponse, Event } from '../types/types';
 
-export const updateEvent = async (eventId: String) => {
+export const updateEvent = async (event: Event, eventId: String) => {
   let token = getLocalToken() || '';
   try {
     const response = await fetch(`${ENDPOINT}/events/${eventId}`, {
@@ -13,7 +13,7 @@ export const updateEvent = async (eventId: String) => {
         'Content-Type': 'application/json',
         Authorization: token,
       },
-      body: JSON.stringify(eventId),
+      body: JSON.stringify(event),
     });
 
     if (!response.ok) {

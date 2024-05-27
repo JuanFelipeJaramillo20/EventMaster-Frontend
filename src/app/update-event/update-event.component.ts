@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { getSingleEvent } from '../../apis/getEventById';
 
 import Swal from 'sweetalert2';
 
@@ -13,41 +14,69 @@ import {
 
 import { LoaderComponent } from '../loader/loader.component';
 
-import { createNewEvent } from '../../apis/createEvent';
+import { updateEvent } from '../../apis/updateEvent';
 
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 
 import { Event } from '../../types/types';
 
 @Component({
-  selector: 'app-create-event',
+  selector: 'app-update-event',
   standalone: true,
   imports: [ReactiveFormsModule, LoaderComponent, CommonModule],
-  templateUrl: './create-event.component.html',
-  styleUrl: './create-event.component.css',
+  templateUrl: './update-event.component.html',
+  styleUrl: './update-event.component.css'
 })
-export class CreateEventComponent {
-  createEventForm: FormGroup;
-
+export class UpdateEventComponent implements OnInit{
+  updateEventForm: FormGroup;
   isLoading: boolean = false;
+  eventId: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.createEventForm = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.email,
-          Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/),
-        ],
-      ],
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+    this.updateEventForm = this.fb.group({
+      name: ['',Validators.required],
       type: ['', Validators.required],
       capacity: [8, Validators.required],
       description: ['', Validators.required],
     });
+
+    this.route.paramMap.subscribe((params) => {
+      this.eventId = params.get('id');
+    });
   }
 
-  validateCreateEvent = (newEvent: Event) => {
+  ngOnInit() {
+    this.fetchSingleEvent();
+  }
+
+  fetchSingleEvent = async () => {
+    this.route.paramMap.subscribe(async (params) => {
+      this.eventId = params.get('id');
+      if (!this.eventId) return;
+      this.isLoading = true;
+      try {
+        const fetchedEvent: any = await getSingleEvent(this.eventId);
+        if (fetchedEvent?.errorMessage || !fetchedEvent.data) {
+          this.isLoading = false;
+          // MOSTRAR NOTIFICACIÓN DE ERROR
+          return;
+        }
+        const eventData = fetchedEvent.data;
+        this.updateEventForm.setValue({
+          name: eventData.name,
+          type: eventData.type,
+          capacity: eventData.capacity,
+          description: eventData.description
+        });
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        // MANEJAR ERROR
+      }
+    });
+  };
+
+  validateUpdateEvent = (newEvent: Event) => {
     const validator: any = {
       Nombre: () => {
         if (newEvent.name.length < 1) {
@@ -89,7 +118,7 @@ export class CreateEventComponent {
         removeErrorInput('capacity');
         return [true, ''];
       },
-      description: () => {
+      descripción: () => {
         if (newEvent.description.length < 8) {
           addErrorInput('description');
           return [false, 'La descripción del evento es muy corta'];
@@ -110,10 +139,10 @@ export class CreateEventComponent {
     return [true, '', ''];
   };
 
-  createEvent = async (newEvent: Event) => {
+  update_Event = async (event: Event, eventId: String) => {
     this.isLoading = true;
-    const createdEvent: any = await createNewEvent(newEvent);
-    if (createdEvent?.errorMessage || !createdEvent?.data) {
+    const updatedEvent: any = await updateEvent(event, eventId);
+    if (updatedEvent?.errorMessage || !updatedEvent?.data) {
       // TIRAR UNA NOTIFICACIÓN DICIENDO PQ NO SE PUDO HACER
       this.isLoading = false;
     }
@@ -123,27 +152,28 @@ export class CreateEventComponent {
   };
 
   onSubmit() {
-    console.log('createEvent', this.createEventForm.value);
-    if (!this.createEventForm.value) return;
-    const [state, error, key] = this.validateCreateEvent(
-      this.createEventForm.value
+    console.log('updateEvent', this.updateEventForm.value);
+    if (!this.updateEventForm.value) return;
+    const [state, error, key] = this.validateUpdateEvent(
+      this.updateEventForm.value
     );
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
       this.failureNotification(error);
       return;
     }
-    this.createEvent(this.createEventForm.value);
+    
+    this.update_Event(this.updateEventForm.value, this.eventId!);
   }
 
   successNotification() {
     Swal.fire(
-      'Evento Creado',
-      'Se ha creado el evento correctamente',
+      'Evento Actualizado',
+      'Se ha actualizado el evento correctamente',
       'success'
     );
   }
   failureNotification(error: string) {
-    Swal.fire('Evento no creado', error, 'error');
+    Swal.fire('Evento no actualizado', error, 'error');
   }
 }

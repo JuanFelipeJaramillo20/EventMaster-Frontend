@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 import { getSingleEvent } from '../../apis/getEventById';
 import { deleteEventById } from '../../apis/deleteEvent';
@@ -24,7 +25,7 @@ export class SingleEventComponent implements OnInit {
 
   eventToShow: EventRetrieved | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   fetchSingleEvent = async () => {
     this.route.paramMap.subscribe((params) => {
@@ -49,6 +50,12 @@ export class SingleEventComponent implements OnInit {
     await deleteEventById(this.eventId);
     console.log('deleted: ', this.eventId);
   };
+
+  navigateToUpdateEvent() {
+    if (this.eventId) {
+      this.router.navigate(['/update-event', this.eventId]);
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     this.eventToShow = await this.fetchSingleEvent();

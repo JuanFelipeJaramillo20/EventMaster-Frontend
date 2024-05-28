@@ -20,11 +20,29 @@
       "event-capacity event-type"
       "event-description event-description";
 
+    min-width: 330px;
+    width: 55vw;
+    & h6 {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: left;
+      align-items: center;
+      gap: 5px;
+
+      & img {
+        width: 18px;
+      }
+    }
+
     & .home-event__name {
       grid-area: event-name;
     }
     & .home-event__capacity {
       grid-area: event-capacity;
+
+      & span {
+        margin-left: 23px;
+      }
     }
     & .home-event__type {
       grid-area: event-type;

@@ -149,15 +149,12 @@ export class RegisterComponent {
       await registerUser(userCredentials);
 
     if (registeredUser?.errorMessage || !registeredUser?.data) {
-      this.failureNotification("Intentalo nuevamente por favor")
+      this.failureNotification('Intentalo nuevamente por favor');
       this.isLoading = false;
       return;
     }
     this.isLoading = false;
     this.successNotification();
-    setTimeout(() => {
-      this.redirectToLogin();
-    }, 1500);
   };
 
   onSubmit() {
@@ -173,26 +170,16 @@ export class RegisterComponent {
   }
 
   successNotification() {
-    Swal.fire('Registrado!', 'Te has registrado correctamente', 'success');
+    Swal.fire('Registrado!', 'Te has registrado correctamente', 'success').then(
+      (e) => {
+        if (e) {
+          this.redirectToLogin();
+        }
+      }
+    );
   }
   failureNotification(error: string) {
-    Swal.fire('Hubo un error', error, 'error');
+    Swal.fire('Hubo un error', error, 'warning');
   }
 
-  // alertConfirmation() {
-  //   Swal.fire({
-  //     title: 'Registrado!',
-  //     text: 'Te has registrado correctamente',
-  //     icon: 'success',
-  //     showCancelButton: false,
-  //     confirmButtonText: 'Ir a Login',
-  //     cancelButtonText: 'Quedarse',
-  //   }).then((result) => {
-  //     if (result.value) {
-  //       Swal.fire('Removed!', 'Product removed successfully.', 'success');
-  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
-  //       Swal.fire('Cancelled', 'Product still in our database.)', 'error');
-  //     }
-  //   });
-  // }
 }

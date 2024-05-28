@@ -3,6 +3,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { CreateEventComponent } from './create-event/create-event.component';
+import { SingleUserComponent } from './single-user/single-user.component';
+import { SingleEventComponent } from './single-event/single-event.component';
 
 import {
   APP_HOME,

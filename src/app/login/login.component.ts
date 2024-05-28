@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
       !loginCurrentUser?.data?.success ||
       !loginCurrentUser?.data?.access_token
     ) {
-      this.failureNotification("Intentalo otra vez")
+      this.failureNotification('Intentalo otra vez');
       this.isLoading = false;
       return;
     }
@@ -120,9 +120,6 @@ export class LoginComponent implements OnInit {
     setLocalToken(loginCurrentUser?.data?.access_token);
 
     this.successNotification();
-    setTimeout(() => {
-      this.redirectToHome();
-    }, 1500);
   };
 
   onSubmit() {
@@ -131,16 +128,22 @@ export class LoginComponent implements OnInit {
     const [state, error, key] = this.validateLogin(this.loginForm.value);
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
-      this.failureNotification(error)
+      this.failureNotification(error);
       return;
     }
     this.getCurrentUser(this.loginForm.value);
   }
 
   successNotification() {
-    Swal.fire('Iniciaste sesión!', 'Bienvenido de nuevo', 'success');
+    Swal.fire('Iniciaste sesión!', 'Bienvenido de nuevo', 'success').then(
+      (e) => {
+        if (e) {
+          this.redirectToHome();
+        }
+      }
+    );
   }
   failureNotification(error: string) {
-    Swal.fire('Ups! hubo un error', error, 'error');
+    Swal.fire('Ups! hubo un error', error, 'warning');
   }
 }

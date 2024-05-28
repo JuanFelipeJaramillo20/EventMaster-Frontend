@@ -11,6 +11,8 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import { APP_HOME, APP_LOGIN } from '../../constants/constants';
+
 import { LoaderComponent } from '../loader/loader.component';
 
 import { createNewEvent } from '../../apis/createEvent';
@@ -47,6 +49,10 @@ export class CreateEventComponent {
     });
   }
 
+  redirectToLogin() {
+    this.router.navigate([`/${APP_LOGIN}`]);
+  }
+
   validateCreateEvent = (newEvent: Event) => {
     const validator: any = {
       Nombre: () => {
@@ -54,9 +60,9 @@ export class CreateEventComponent {
           addErrorInput('name');
           return [false, 'Añade un nombre al evento'];
         }
-        if (newEvent.name.length > 20) {
+        if (newEvent.name.length >= 30) {
           addErrorInput('name');
-          return [false, 'El nombre del evento es muy largo'];
+          return [false, 'El nombre del evento es muy largo (30 máximo)'];
         }
         removeErrorInput('name');
         return [true, ''];
@@ -66,13 +72,13 @@ export class CreateEventComponent {
           addErrorInput('type');
           return [false, 'Añade un tipo de evento'];
         }
-        if (newEvent.type.length > 20) {
+        if (newEvent.type.length >= 20) {
           addErrorInput('type');
           return [false, 'El tipo del evento es muy largo, (20 máximo)'];
         }
         if (!newEvent.type.match(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/)) {
           addErrorInput('type');
-          return [false, 'El tipo del evento es inválido'];
+          return [false, 'El tipo no puede tener espacios en blanco o carácteres extraños'];
         }
         removeErrorInput('type');
         return [true, ''];
@@ -92,11 +98,11 @@ export class CreateEventComponent {
       description: () => {
         if (newEvent.description.length < 8) {
           addErrorInput('description');
-          return [false, 'La descripción del evento es muy corta'];
+          return [false, 'La descripción del evento es muy corta (mínimo 8)'];
         }
-        if (newEvent.description.length > 500) {
+        if (newEvent.description.length >= 500) {
           addErrorInput('name');
-          return [false, 'La descripción no puede ser tan larga'];
+          return [false, 'La descripción no puede ser tan larga (máximo 500)'];
         }
         removeErrorInput('name');
         return [true, ''];
@@ -114,8 +120,9 @@ export class CreateEventComponent {
     this.isLoading = true;
     const createdEvent: any = await createNewEvent(newEvent);
     if (createdEvent?.errorMessage || !createdEvent?.data) {
-      // TIRAR UNA NOTIFICACIÓN DICIENDO PQ NO SE PUDO HACER
       this.isLoading = false;
+      this.failureNotificationLogin('Inicia sesión e intentalo otra vez!');
+      return;
     }
     this.isLoading = false;
     this.successNotification();
@@ -141,9 +148,21 @@ export class CreateEventComponent {
       'Evento Creado',
       'Se ha creado el evento correctamente',
       'success'
-    );
+    ).then((e) => {
+      if (e) {
+        this.router.navigate([`/${APP_HOME}`]);
+      }
+    });
   }
   failureNotification(error: string) {
-    Swal.fire('Evento no creado', error, 'error');
+    Swal.fire('Evento no creado', error, 'warning');
+  }
+
+  failureNotificationLogin(error: string) {
+    Swal.fire('Ups! hubo un error', error, 'error').then((e) => {
+      if (e) {
+        this.redirectToLogin();
+      }
+    });
   }
 }

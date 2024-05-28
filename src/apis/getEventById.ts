@@ -15,25 +15,32 @@ export const getSingleEvent = async (eventId: string) => {
       },
     });
 
+    if (response.status >= 404) {
+      throw new Error(`No se econtró el evento`);
+    }
+    if (response.status >= 400) {
+      throw new Error(`Hubo un error en la petición`);
+    }
     if (!response.ok) {
-      throw new Error(`Response ok wasn't TRUE, Error: ${response.statusText}`);
+      throw new Error(
+        `Inicia sesión e intentalo otra vez!, ${response.statusText}`
+      );
     }
 
     const data: EventApiResponse = await response.json();
+    if (data.statusCode == 404) {
+      throw new Error(`No se econtró el evento, ${data.statusCode}`);
+    }
     if (data.statusCode >= 400) {
-      throw new Error(
-        `Get user has a different status code, ${data.statusCode}`
-      );
+      throw new Error(`Hubo un error en la petición, ${data.statusCode}`);
     }
     if (!data) {
-      throw new Error(
-        `Data cannot be undefined, check status code, data: ${data}`
-      );
+      throw new Error(`Inicia sesión e intentalo otra vez!, data: ${data}`);
     }
     return data;
   } catch (err) {
     const errorMessage: ErrorResponse = {
-      errorMessage: `Error al hacer fetch para obtener un evento, ${err}`,
+      errorMessage: `${err}`,
     };
     return errorMessage;
   }

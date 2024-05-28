@@ -1,29 +1,47 @@
 <section class="single-event-section">
   <ol *ngIf="eventToShow">
     <li class="home-event__name">
-      <h6>Nombre del Evento</h6>
+      <h6>
+        Nombre del Evento
+        <img src="../../assets/icons/images/event-name.png" alt="Event name" />
+      </h6>
       <span>{{ eventToShow.name }}</span>
     </li>
     <li class="home-event__capacity">
-      <h6>Capacidad del Evento</h6>
+      <h6>
+        Capacidad del Evento
+        <img
+          src="../../assets/icons/images/event-capacity.png"
+          alt="Event capacity"
+        />
+      </h6>
       <span>
         {{ eventToShow.capacity }}
       </span>
     </li>
     <li class="home-event__type">
-      <h6>Tipo del evento</h6>
+      <h6>
+        Tipo del evento
+        <img src="../../assets/icons/images/type-event.png" alt="Event type" />
+      </h6>
       <span>
         {{ eventToShow.type }}
       </span>
     </li>
     <li class="home-event__description">
-      <h6>Descripción del evento</h6>
+      <h6>
+        Descripción del evento
+        <img
+          src="../../assets/icons/images/event-description.png"
+          alt="Event description"
+        />
+      </h6>
       <span>
         {{ eventToShow.description }}
       </span>
     </li>
     <li>
-      <button (click)="deleteEvent()">Eliminar Evento</button>
+      <button (click)="alertConfirmation()">Eliminar Evento</button>
     </li>
     <li>
       <button (click)="navigateToUpdateEvent()">Actualizar Evento</button>

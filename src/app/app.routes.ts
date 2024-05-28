@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { SingleUserComponent } from './single-user/single-user.component';
 import { SingleEventComponent } from './single-event/single-event.component';
+import { UpdateEventComponent } from './update-event/update-event.component';
 
 import {
   APP_HOME,
@@ -15,9 +16,6 @@ import {
   APP_SINGLE_USER,
   APP_UPDATE_EVENT,
 } from '../constants/constants';
-import { SingleUserComponent } from './single-user/single-user.component';
-import { SingleEventComponent } from './single-event/single-event.component';
-import { UpdateEventComponent } from './update-event/update-event.component';
 
 export const routes: Routes = [
   {

@@ -20,6 +20,7 @@ import { createNewEvent } from '../../apis/createEvent';
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 
 import { Event } from '../../types/types';
+import { getUserID } from '../../localStorage/handleUserID';
 
 @Component({
   selector: 'app-create-event',
@@ -78,7 +79,10 @@ export class CreateEventComponent {
         }
         if (!newEvent.type.match(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/)) {
           addErrorInput('type');
-          return [false, 'El tipo no puede tener espacios en blanco o carácteres extraños'];
+          return [
+            false,
+            'El tipo no puede tener espacios en blanco o carácteres extraños',
+          ];
         }
         removeErrorInput('type');
         return [true, ''];
@@ -116,9 +120,12 @@ export class CreateEventComponent {
     return [true, '', ''];
   };
 
-  createEvent = async (newEvent: Event) => {
+  createEvent = async (newEvent: Event | any) => {
     this.isLoading = true;
-    const createdEvent: any = await createNewEvent(newEvent);
+    const createdEvent: any = await createNewEvent({
+      ...newEvent,
+      user_creator_id: getUserID() || '',
+    });
     if (createdEvent?.errorMessage || !createdEvent?.data) {
       this.isLoading = false;
       this.failureNotificationLogin('Inicia sesión e intentalo otra vez!');

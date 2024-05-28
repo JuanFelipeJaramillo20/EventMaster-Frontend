@@ -11,6 +11,7 @@ import { getUserById } from '../../apis/getUserbyId';
 import { APP_LOGIN } from '../../constants/constants';
 
 import { User } from '../../types/types';
+import { getUserID } from '../../localStorage/handleUserID';
 
 @Component({
   selector: 'app-single-user',
@@ -23,6 +24,8 @@ export class SingleUserComponent implements OnInit {
   userId: string | null = null;
   isLoading: boolean = true;
 
+  isCurrentUser: boolean = true;
+
   userToShow: User | null = null;
 
   constructor(private route: ActivatedRoute, private redirect: Router) {}
@@ -33,6 +36,7 @@ export class SingleUserComponent implements OnInit {
     });
     console.log('userId', this.userId);
 
+    this.isCurrentUser = this.userId == getUserID();
     if (!this.userId) return;
     this.isLoading = true;
     const fetchedUser: any = await getUserById(this.userId);

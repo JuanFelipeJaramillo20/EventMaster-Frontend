@@ -84,3 +84,9 @@ export type DeletedEventApiResponse = {
     message: string;
   };
 };
+
+
+export type JoinedToEventResponse = {
+  statusCode: number;
+  data: User[]
+}

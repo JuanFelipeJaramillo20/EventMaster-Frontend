@@ -7,6 +7,21 @@
       </h6>
       <span>{{ eventToShow.name }}</span>
     </li>
+    <li *ngIf="userOwner" class="home-event__creator">
+      <h6>
+        Creador
+        <img src="../../assets/icons/images/user.png" alt="User name" />
+      </h6>
+      <span
+        ><a
+          [routerLink]="['/single-user', userOwner.id]"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+        >
+          {{ userOwner.firstName }} {{ userOwner.lastName }}
+        </a></span
+      >
+    </li>
     <li class="home-event__capacity">
       <h6>
         Capacidad del Evento
@@ -40,14 +55,19 @@
         {{ eventToShow.description }}
       </span>
     </li>
-    <li>
+    <li *ngIf="isCurrentUserCreator">
       <button (click)="alertConfirmation()">Eliminar</button>
     </li>
-    <li>
+    <li *ngIf="isCurrentUserCreator">
       <button (click)="navigateToUpdateEvent()">Actualizar</button>
     </li>
     <li>
-      <button (click)="participate()" [disabled]="!isAbleToJoin">{{isAbleToJoin ? "Participar" : "Lleno"}}</button>
+      <button
+        (click)="alertParticipateConfirmation()"
+        [disabled]="!isAbleToJoin"
+      >
+        {{ joinButtonText }}
+      </button>
     </li>
   </ol>
   <div *ngIf="isLoading">

@@ -19,22 +19,27 @@ import { updateEvent } from '../../apis/updateEvent';
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 
 import { Event } from '../../types/types';
+import { getUserID } from '../../localStorage/handleUserID';
 
 @Component({
   selector: 'app-update-event',
   standalone: true,
   imports: [ReactiveFormsModule, LoaderComponent, CommonModule],
   templateUrl: './update-event.component.html',
-  styleUrl: './update-event.component.css'
+  styleUrl: './update-event.component.css',
 })
-export class UpdateEventComponent implements OnInit{
+export class UpdateEventComponent implements OnInit {
   updateEventForm: FormGroup;
   isLoading: boolean = false;
   eventId: string | null = null;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.updateEventForm = this.fb.group({
-      name: ['',Validators.required],
+      name: ['', Validators.required],
       type: ['', Validators.required],
       capacity: [8, Validators.required],
       description: ['', Validators.required],
@@ -66,7 +71,7 @@ export class UpdateEventComponent implements OnInit{
           name: eventData.name,
           type: eventData.type,
           capacity: eventData.capacity,
-          description: eventData.description
+          description: eventData.description,
         });
         this.isLoading = false;
       } catch (error) {
@@ -139,9 +144,12 @@ export class UpdateEventComponent implements OnInit{
     return [true, '', ''];
   };
 
-  update_Event = async (event: Event, eventId: String) => {
+  update_Event = async (event: Event | any, eventId: String) => {
     this.isLoading = true;
-    const updatedEvent: any = await updateEvent(event, eventId);
+    const updatedEvent: any = await updateEvent(
+      { ...event, user_creator_id: getUserID() || '' },
+      eventId
+    );
     if (updatedEvent?.errorMessage || !updatedEvent?.data) {
       // TIRAR UNA NOTIFICACIÓN DICIENDO PQ NO SE PUDO HACER
       this.isLoading = false;
@@ -162,7 +170,7 @@ export class UpdateEventComponent implements OnInit{
       this.failureNotification(error);
       return;
     }
-    
+
     this.update_Event(this.updateEventForm.value, this.eventId!);
   }
 

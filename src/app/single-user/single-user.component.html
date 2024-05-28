@@ -22,7 +22,7 @@
       <span>{{ userToShow.email }}</span>
     </li>
     <li>
-      <button>Actualizar perfil</button>
+      <button *ngIf="isCurrentUser">Actualizar perfil</button>
     </li>
   </ol>
   <div *ngIf="isLoading">

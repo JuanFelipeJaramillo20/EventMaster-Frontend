@@ -17,18 +17,18 @@ export const updateEvent = async (event: Event, eventId: String) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Response ok wasn't TRUE, Error: ${response.statusText}`);
+      throw new Error(`Hubo un error, inicia sesión e intenta otra vez! ${response.statusText}`);
     }
 
     const data: EventApiResponse = await response.json();
     if (data.statusCode >= 400) {
       throw new Error(
-        `Create event has a different status code, ${data.statusCode}`
+        `Hubo un error, inicia sesión e intenta otra vez! ${data.statusCode}`
       );
     }
     if (!data) {
       throw new Error(
-        `Data cannot be undefined, check status code, data: ${data}`
+        `Hubo un error, inicia sesión e intenta otra vez! ${data}`
       );
     }
     return data;

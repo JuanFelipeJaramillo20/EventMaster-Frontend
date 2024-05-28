@@ -26,6 +26,14 @@
         >
       </li>
       <li>
+        <a
+          [routerLink]="currentUserID"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><h3>Perfil</h3></a
+        >
+      </li>
+      <li>
         <button (click)="alertConfirmation()" class="hover-link__button">
           Cerrar Sesión
         </button>

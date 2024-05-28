@@ -1,13 +1,31 @@
 <section class="single-user-section">
   <ol *ngIf="userToShow">
-    <li>
-      {{ userToShow.firstName }}
+    <li class="single-user__name">
+      <h6>
+        <div>Nombre:</div>
+        <img src="../../assets/icons/images/user.png" alt="Name icon" />
+      </h6>
+      <span>{{ userToShow.firstName }}</span>
+    </li>
+    <li class="single-user__lastname">
+      <h6>
+        <div>Apellido:</div>
+        <img src="../../assets/icons/images/user.png" alt="Lastname icon" />
+      </h6>
+      <span>{{ userToShow.lastName }}</span>
+    </li>
+    <li class="single-user__email">
+      <h6>
+        <div>Email:</div>
+        <img src="../../assets/icons/images/email.png" alt="Email icon" />
+      </h6>
+      <span>{{ userToShow.email }}</span>
     </li>
     <li>
-      {{ userToShow.lastName }}
-    </li>
-    <li>
-      {{ userToShow.email }}
+      <button>Actualizar perfil</button>
     </li>
   </ol>
+  <div *ngIf="isLoading">
+    <app-loader></app-loader>
+  </div>
 </section>

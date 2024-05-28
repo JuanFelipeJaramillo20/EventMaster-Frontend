@@ -2,9 +2,12 @@ import { getLocalToken } from '../localStorage/handleToken';
 
 import { POST_METHOD, ENDPOINT } from '../constants/constants';
 
-import { ErrorResponse, EventApiResponse } from '../types/types';
+import { ErrorResponse, EventApiJoinEventResponse } from '../types/types';
 
-export const addAttendeeEvent = async (eventId: string) => {
+export const addAttendeeEvent = async (
+  eventId: string,
+  userID: number | string
+) => {
   let token = getLocalToken() || '';
   try {
     const response = await fetch(`${ENDPOINT}/events/${eventId}/addAttendee`, {
@@ -13,27 +16,28 @@ export const addAttendeeEvent = async (eventId: string) => {
         'Content-Type': 'application/json',
         Authorization: token,
       },
+      body: JSON.stringify({
+        userId: userID,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`Response ok wasn't TRUE, Error: ${response.statusText}`);
+      throw new Error(
+        `Inicia sesión e intenta de nuevo ${response.statusText}`
+      );
     }
 
-    const data: EventApiResponse = await response.json();
+    const data: EventApiJoinEventResponse = await response.json();
     if (data.statusCode >= 400) {
-      throw new Error(
-        `Get user has a different status code, ${data.statusCode}`
-      );
+      throw new Error(`Inicia sesión e intenta de nuevo ${data.statusCode}`);
     }
     if (!data) {
-      throw new Error(
-        `Data cannot be undefined, check status code, data: ${data}`
-      );
+      throw new Error(`Inicia sesión e intenta de nuevo ${data}`);
     }
     return data;
   } catch (err) {
     const errorMessage: ErrorResponse = {
-      errorMessage: `Error al hacer fetch para añadir participante a un evento, ${err}`,
+      errorMessage: `${err}`,
     };
     return errorMessage;
   }

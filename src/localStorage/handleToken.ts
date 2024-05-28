@@ -10,5 +10,5 @@ export const getLocalToken = () => {
 };
 
 export const removeLocalToken = () => {
-  return window.localStorage.removeItem(TOKEN_NAME);
+  window.localStorage.removeItem(TOKEN_NAME);
 };

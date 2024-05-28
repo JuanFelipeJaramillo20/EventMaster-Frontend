@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { APP_LOGIN } from '../../constants/constants';
 
 import { removeLocalToken } from '../../localStorage/handleToken';
+import { getUserID, removeUserID } from '../../localStorage/handleUserID';
 
 @Component({
   selector: 'app-navbar',
@@ -18,15 +19,19 @@ import { removeLocalToken } from '../../localStorage/handleToken';
 export class NavbarComponent implements OnInit {
   showNavigation = false;
 
+  currentUserID: string | null = null;
+
   constructor(private router: Router) {}
 
   redirectToLogin() {
+    removeUserID();
     removeLocalToken();
     this.successNotification();
     this.router.navigate([`/${APP_LOGIN}`]);
   }
 
   ngOnInit(): void {
+    this.currentUserID = `/single-user/${getUserID()}`;
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {

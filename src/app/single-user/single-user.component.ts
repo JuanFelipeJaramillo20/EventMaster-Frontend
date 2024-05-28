@@ -1,24 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
+import { LoaderComponent } from '../loader/loader.component';
 
 import { getUserById } from '../../apis/getUserbyId';
+
+import { APP_LOGIN } from '../../constants/constants';
 
 import { User } from '../../types/types';
 
 @Component({
   selector: 'app-single-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './single-user.component.html',
   styleUrl: './single-user.component.css',
 })
 export class SingleUserComponent implements OnInit {
   userId: string | null = null;
+  isLoading: boolean = true;
 
   userToShow: User | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private redirect: Router) {}
 
   fetchSingleUser = async () => {
     this.route.paramMap.subscribe((params) => {
@@ -27,16 +34,31 @@ export class SingleUserComponent implements OnInit {
     console.log('userId', this.userId);
 
     if (!this.userId) return;
+    this.isLoading = true;
     const fetchedUser: any = await getUserById(this.userId);
     if (fetchedUser?.errorMessage || !fetchedUser.data) {
-      // MOSTRAR NOTIFICACIÓN DE ERROR
+      this.isLoading = false;
+      this.failureNotification(fetchedUser?.errorMessage);
       return;
     }
+    this.isLoading = false;
     return fetchedUser.data;
   };
 
   async ngOnInit(): Promise<void> {
     this.userToShow = await this.fetchSingleUser();
     console.log('eventShow', this.userToShow);
+  }
+
+  redirectToLogin() {
+    this.redirect.navigate([`/${APP_LOGIN}`]);
+  }
+
+  failureNotification(error: string, isRedirect: boolean = false) {
+    Swal.fire('Ups! hubo un error', error, 'error').then((e) => {
+      if (isRedirect && e) {
+        this.redirectToLogin();
+      }
+    });
   }
 }

@@ -16,9 +16,9 @@
   & ol {
     display: grid;
     grid-template-areas:
-      "event-name event-name"
-      "event-capacity event-type"
-      "event-description event-description";
+      "event-name event-name event-name"
+      "event-capacity event-capacity event-type"
+      "event-description event-description event-description";
 
     min-width: 330px;
     width: 55vw;
@@ -34,15 +34,15 @@
       }
     }
 
+    & span {
+      margin-left: 23px;
+    }
+
     & .home-event__name {
       grid-area: event-name;
     }
     & .home-event__capacity {
       grid-area: event-capacity;
-
-      & span {
-        margin-left: 23px;
-      }
     }
     & .home-event__type {
       grid-area: event-type;

@@ -19,3 +19,5 @@ export const APP_UPDATE_EVENT = 'update-event';
 // TOKEN NAME
 export const TOKEN_NAME = 'token';
 
+// USER ID
+export const USER_ID = 'user-id';

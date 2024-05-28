@@ -22,6 +22,7 @@ import {
 
 import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
 import { setLocalToken } from '../../localStorage/handleToken';
+import { setUserID } from '../../localStorage/handleUserID';
 
 import { APP_HOME } from '../../constants/constants';
 
@@ -118,6 +119,7 @@ export class LoginComponent implements OnInit {
     }
     this.isLoading = false;
     setLocalToken(loginCurrentUser?.data?.access_token);
+    setUserID(loginCurrentUser?.data?.userId);
 
     this.successNotification();
   };

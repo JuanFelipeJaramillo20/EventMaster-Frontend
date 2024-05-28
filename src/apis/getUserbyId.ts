@@ -15,25 +15,31 @@ export const getUserById = async (userId: string) => {
       },
     });
 
+    if (response.status >= 400) {
+      throw new Error(`Hubo un error, inicia sesión e intenta otra vez!: ${response.statusText}`);
+    }
+    if (response.status >= 404) {
+      throw new Error(`Hubo un error, no se encontró el usuario!: ${response.statusText}`);
+    }
     if (!response.ok) {
-      throw new Error(`Response ok wasn't TRUE, Error: ${response.statusText}`);
+      throw new Error(`Hubo un error, inicia sesión e intenta otra vez!: ${response.statusText}`);
     }
 
     const data: RegisterApiResponse = await response.json();
     if (data.statusCode >= 400) {
       throw new Error(
-        `Get user has a different status code, ${data.statusCode}`
+        `Algo salió mal, ${data.statusCode}`
       );
     }
     if (!data) {
       throw new Error(
-        `Data cannot be undefined, check status code, data: ${data}`
+        `Hubo un error, inicia sesión e intenta otra vez!: ${data}`
       );
     }
     return data;
   } catch (err) {
     const errorMessage: ErrorResponse = {
-      errorMessage: `Error al hacer fetch para obtener un usuario, ${err}`,
+      errorMessage: `${err}`,
     };
     return errorMessage;
   }

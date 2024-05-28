@@ -64,6 +64,15 @@ export type EventApiResponse = {
   data: EventRetrieved;
 };
 
+export type MessageResponse = {
+  message: string;
+};
+
+export type EventApiJoinEventResponse = {
+  statusCode: number;
+  data: MessageResponse;
+};
+
 export type EventsGetApiResponse = {
   statusCode: number;
   data: EventRetrieved[];

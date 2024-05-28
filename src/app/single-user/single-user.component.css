@@ -2,5 +2,60 @@
   width: 100vw;
   height: 100dvh;
 
-  background-color: red;
+  background-color: var(--main-color);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & ol {
+    display: grid;
+    grid-template-areas:
+      "single-user-name"
+      "single-user-lastname"
+      "single-user-email";
+
+    min-width: 230px;
+    width: 35vw;
+    & span {
+      margin-left: 23px;
+    }
+    & h6 {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: left;
+      align-items: center;
+      gap: 5px;
+
+      & img {
+        width: 18px;
+      }
+    }
+
+    & .single-user__name {
+      grid-area: single-user-name;
+    }
+    & .single-user__lastname {
+      grid-area: single-user-lastname;
+    }
+    & .single-user__email {
+      grid-area: single-user-email;
+    }
+
+    & li {
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+
+      & h6,
+      & span {
+        font-size: 14px;
+      }
+    }
+  }
 }

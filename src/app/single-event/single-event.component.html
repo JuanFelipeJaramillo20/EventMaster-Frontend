@@ -41,10 +41,13 @@
       </span>
     </li>
     <li>
-      <button (click)="alertConfirmation()">Eliminar Evento</button>
+      <button (click)="alertConfirmation()">Eliminar</button>
     </li>
     <li>
-      <button (click)="navigateToUpdateEvent()">Actualizar Evento</button>
+      <button (click)="navigateToUpdateEvent()">Actualizar</button>
+    </li>
+    <li>
+      <button (click)="participate()" [disabled]="!isAbleToJoin">{{isAbleToJoin ? "Participar" : "Lleno"}}</button>
     </li>
   </ol>
   <div *ngIf="isLoading">

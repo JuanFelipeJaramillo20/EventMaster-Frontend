@@ -95,8 +95,8 @@ export class CreateEventComponent {
         removeErrorInput('capacity');
         return [true, ''];
       },
-      descripción: () => {
-        if (newEvent.description.length <= 8) {
+      description: () => {
+        if (newEvent.description.length < 8) {
           addErrorInput('description');
           return [false, 'La descripción del evento es muy corta (mínimo 8)'];
         }
@@ -126,6 +126,7 @@ export class CreateEventComponent {
     }
     this.isLoading = false;
     this.successNotification();
+    this.router.navigate(['/home']);
   };
 
   onSubmit() {

@@ -1,0 +1,73 @@
+<div *ngIf="isLoading">
+  <app-loader></app-loader>
+</div>
+<form
+  class="form-update-envent forms"
+  [formGroup]="updateEventForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="!isLoading"
+>
+  <div>
+    <h1>Actualizar Evento</h1>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="name"
+      id="name"
+      formControlName="name"
+      placeholder="Reunión con los panas"
+    />
+    <label for="name">
+      Nombre del Evento
+      <img
+        src="../../assets/icons/images/event-name.png"
+        alt="name input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input type="string" id="type" formControlName="type" placeholder="Paseo" />
+    <label for="type">
+      Tipo de evento
+      <img
+        src="../../assets/icons/images/type-event.png"
+        alt="type input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <input
+      type="number"
+      id="capacity"
+      formControlName="capacity"
+      placeholder="Capacidad del evento"
+      min="1"
+    />
+    <label for="capacity">
+      Capacidad del evento
+      <img
+        src="../../assets/icons/images/event-capacity.png"
+        alt="capacity input reference"
+      />
+    </label>
+  </div>
+  <div class="form-group--input">
+    <textarea
+      name="description"
+      id="description"
+      formControlName="description"
+      placeholder="Habrá fiest y rumba, lleguen rápido"
+    ></textarea>
+    <label for="description">
+      Descripción del evento
+      <img
+        src="../../assets/icons/images/event-description.png"
+        alt="description input reference"
+      />
+    </label>
+  </div>
+  <button type="submit">Actualizar Evento</button>
+</form>
+<div *ngIf="isLoading">
+  <app-loader></app-loader>
+</div>

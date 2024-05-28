@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
 
+
 import { getSingleEvent } from '../../apis/getEventById';
 import { deleteEventById } from '../../apis/deleteEvent';
 
@@ -28,7 +29,7 @@ export class SingleEventComponent implements OnInit {
 
   eventToShow: EventRetrieved | null = null;
 
-  constructor(private route: ActivatedRoute, private redirect: Router) {}
+  constructor(private route: ActivatedRoute, private redirect: Router, private router: Router) {}
 
   redirectToLogin() {
     this.redirect.navigate([`/${APP_LOGIN}`]);
@@ -72,6 +73,12 @@ export class SingleEventComponent implements OnInit {
     this.isLoading = false;
     this.successNotification();
   };
+
+  navigateToUpdateEvent() {
+    if (this.eventId) {
+      this.router.navigate(['/update-event', this.eventId]);
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     this.eventToShow = await this.fetchSingleEvent();

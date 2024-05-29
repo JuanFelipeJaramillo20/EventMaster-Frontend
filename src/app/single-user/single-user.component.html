@@ -21,8 +21,8 @@
       </h6>
       <span>{{ userToShow.email }}</span>
     </li>
-    <li>
-      <button *ngIf="isCurrentUser">Actualizar perfil</button>
+    <li *ngIf="isCurrentUser">
+      <button (click)="navigateToUpdateUser()">Actualizar perfil</button>
     </li>
   </ol>
   <div *ngIf="isLoading">

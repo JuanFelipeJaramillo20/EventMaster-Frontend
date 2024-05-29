@@ -28,7 +28,7 @@ export class SingleUserComponent implements OnInit {
 
   userToShow: User | null = null;
 
-  constructor(private route: ActivatedRoute, private redirect: Router) {}
+  constructor(private route: ActivatedRoute, private redirect: Router, private router: Router) {}
 
   fetchSingleUser = async () => {
     this.route.paramMap.subscribe((params) => {
@@ -56,6 +56,12 @@ export class SingleUserComponent implements OnInit {
 
   redirectToLogin() {
     this.redirect.navigate([`/${APP_LOGIN}`]);
+  }
+
+  navigateToUpdateUser() {
+    if (this.userId) {
+      this.router.navigate(['/update-user', this.userId]);
+    }
   }
 
   failureNotification(error: string, isRedirect: boolean = false) {

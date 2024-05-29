@@ -1,0 +1,40 @@
+<div *ngIf="isLoading">
+    <app-loader></app-loader>
+</div>
+<form class="form-register" [formGroup]="updateUserForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+    <div>
+        <h1>Actualizar usuario</h1>
+    </div>
+    <div class="form-group--input">
+        <input type="text" id="firstName" formControlName="firstName" placeholder="Name" />
+        <label for="firstName">
+            Nombre
+            <img src="../../assets/icons/images/user.png" alt="email input reference" />
+        </label>
+    </div>
+    <div class="form-group--input">
+        <input type="text" id="lastName" formControlName="lastName" placeholder="Name" />
+        <label for="lastName">
+            Apellido
+            <img src="../../assets/icons/images/user.png" alt="email input reference" />
+        </label>
+    </div>
+    <div class="form-group--input">
+        <input type="email" id="email" formControlName="email" placeholder="Email" />
+        <label for="email">
+            Correo Electrónico
+            <img src="../../assets/icons/images/email.png" alt="email input reference" />
+        </label>
+    </div>
+    <div class="form-group--input">
+        <input type="password" id="password" formControlName="password" placeholder="Password" />
+        <label for="password">
+            Contrseña
+            <img src="../../assets/icons/images/password.png" alt="password input reference" />
+        </label>
+    </div>
+    <button type="submit">Actualizar Usuario</button>
+</form>
+<div *ngIf="isLoading">
+    <app-loader></app-loader>
+</div>

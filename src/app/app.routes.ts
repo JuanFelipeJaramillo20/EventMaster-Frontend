@@ -15,7 +15,9 @@ import {
   APP_SINGLE_EVENT,
   APP_SINGLE_USER,
   APP_UPDATE_EVENT,
+  APP_UPDATE_USER,
 } from '../constants/constants';
+import { UpdateUserComponent } from './update-user/update-user.component';
 
 export const routes: Routes = [
   {
@@ -46,4 +48,8 @@ export const routes: Routes = [
     path: `${APP_UPDATE_EVENT}/:id`,
     component: UpdateEventComponent,
   },
+  {
+    path: `${APP_UPDATE_USER}/:id`,
+    component: UpdateUserComponent,
+  }
 ];

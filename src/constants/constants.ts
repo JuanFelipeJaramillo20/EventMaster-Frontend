@@ -15,6 +15,7 @@ export const APP_CREATE_EVENT = 'create-event';
 export const APP_SINGLE_USER = 'single-user';
 export const APP_SINGLE_EVENT = 'single-event';
 export const APP_UPDATE_EVENT = 'update-event';
+export const APP_UPDATE_USER = 'update-user';
 
 // TOKEN NAME
 export const TOKEN_NAME = 'token';

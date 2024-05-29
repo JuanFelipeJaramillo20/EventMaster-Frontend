@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Component, OnInit} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
 import {
@@ -9,30 +9,34 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { updateUser } from '../../apis/updateUser';
 import { LoaderComponent } from '../loader/loader.component';
+import { updateUser } from '../../apis/updateUser';
+import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
+
+import { APP_HOME, APP_LOGIN } from '../../constants/constants';
+import { getUserById } from '../../apis/getUserbyId';
+import { getUserID } from '../../localStorage/handleUserID';
 import {
   RegisterCredentials,
   ErrorResponse,
   RegisterApiResponse,
 } from '../../types/types';
 
-import { addErrorInput, removeErrorInput } from '../../helpers/formHelpers';
-import { APP_LOGIN } from '../../constants/constants';
-
 @Component({
   selector: 'app-update-user',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, LoaderComponent, CommonModule],
   templateUrl: './update-user.component.html',
   styleUrl: './update-user.component.css'
 })
 export class UpdateUserComponent {
-  updateForm: FormGroup;
+  updateUserForm: FormGroup;
   isLoading: boolean = false;
+  userId: string | null = null;
+  isCurrentUser: boolean = true;
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.updateForm = this.fb.group({
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+    this.updateUserForm = this.fb.group({
       firstName: [
         '',
         [
@@ -56,8 +60,39 @@ export class UpdateUserComponent {
     });
   }
 
-  redirectToLogin() {
-    this.router.navigate([`/${APP_LOGIN}`]);
+  redirectToHome() {
+    this.router.navigate([`/${APP_HOME}`]);
+  }
+
+  fetchSingleUser = async () => {
+      this.route.paramMap.subscribe((params) => {
+        this.userId = params.get('id');
+      });
+      console.log('userId', this.userId);
+  
+      this.isCurrentUser = this.userId == getUserID();
+      if (!this.userId) return;
+      this.isLoading = true;
+      const fetchedUser: any = await getUserById(this.userId);
+      if (fetchedUser?.errorMessage || !fetchedUser.data) {
+        this.isLoading = false;
+        this.failureNotification(fetchedUser?.errorMessage);
+        return;
+      }
+      const userData = fetchedUser.data;
+      this.updateUserForm.setValue({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: '',
+      });
+      this.isLoading = false;
+      return fetchedUser.data;
+  };
+  
+
+  ngOnInit() {
+    this.fetchSingleUser();
   }
 
   validateData(credentials: RegisterCredentials) {
@@ -131,12 +166,14 @@ export class UpdateUserComponent {
     return [true, '', ''];
   }
 
-  getNewUser = async (userCredentials: RegisterCredentials) => {
-    this.isLoading = true;
-    const registeredUser: ErrorResponse | RegisterApiResponse | any =
-      await updateUser(userCredentials);
+  
 
-    if (registeredUser?.errorMessage || !registeredUser?.data) {
+  update_user = async (user: RegisterCredentials | any, userId: String) => {
+    this.isLoading = true;
+    const updatedUser: ErrorResponse | RegisterApiResponse | any =
+      await updateUser({...user, user_creator_id: getUserID() || ''}, userId);
+
+    if (updatedUser?.errorMessage || !updatedUser?.data) {
       this.failureNotification('Intentalo nuevamente por favor');
       this.isLoading = false;
       return;
@@ -146,22 +183,22 @@ export class UpdateUserComponent {
   };
 
   onSubmit() {
-    console.log('registerForm', this.updateForm.value);
-    if (!this.updateForm.value) return;
-    const [state, error, key] = this.validateData(this.updateForm.value);
+    console.log('updateForm', this.updateUserForm.value);
+    if (!this.updateUserForm.value) return;
+    const [state, error, key] = this.validateData(this.updateUserForm.value);
     console.log('hasErrors?', { state, error, key });
     if (!state || error) {
       this.failureNotification(error);
       return;
     }
-    this.getNewUser(this.updateForm.value);
+    this.update_user(this.updateUserForm.value, this.userId!);
   }
 
   successNotification() {
-    Swal.fire('Registrado!', 'Te has registrado correctamente', 'success').then(
+    Swal.fire('Actualizado!', 'Se ha actualizado correctamente', 'success').then(
       (e) => {
         if (e) {
-          this.redirectToLogin();
+          this.redirectToHome();
         }
       }
     );

@@ -2,9 +2,9 @@ import { getLocalToken } from '../localStorage/handleToken';
 
 import { PUT_METHOD, ENDPOINT } from '../constants/constants';
 
-import { UserApiResponse, ErrorResponse } from '../types/types';
+import { UserApiResponse, ErrorResponse, RegisterCredentials } from '../types/types';
 
-export const updateUser = async (userId: string) => {
+export const updateUser = async (user: RegisterCredentials, userId: String) => {
   let token = getLocalToken() || '';
   try {
     const response = await fetch(`${ENDPOINT}/users/${userId}`, {
@@ -13,6 +13,7 @@ export const updateUser = async (userId: string) => {
         'Content-Type': 'application/json',
         Authorization: token,
       },
+      body: JSON.stringify(user),
     });
 
     if (!response.ok) {
